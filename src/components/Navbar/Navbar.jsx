@@ -4,6 +4,8 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Container, Button, Link, Logo, Wrapper } from "./style";
 
 const Navbar = () => {
+  const token = localStorage.getItem("userToken");
+
   const location = useLocation();
   const navigate = useNavigate();
   return (
@@ -27,8 +29,14 @@ const Navbar = () => {
               )
           )}
         </Wrapper>
-        <Button onClick={() => navigate("/login")} border>
-          Login
+        <Button
+          onClick={() => {
+            localStorage.removeItem("userToken");
+            navigate("/main");
+          }}
+          border="true"
+        >
+          {token ? "Logout" : "Login"}
         </Button>
       </Container>
       <Outlet />

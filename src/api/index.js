@@ -1,12 +1,13 @@
+import { message } from "antd";
 import axios from "axios";
 
-export const getPostsData = async () => {
+export const getPostsData = async ({ page, limit }) => {
   try {
-    const {
-      data: { data },
-    } = await axios.get(`${process.env.REACT_APP_BASE_URL}`);
+    const { data } = await axios.get(
+      `https://gorest.co.in/public/v1/posts?page=${page}&limit=${limit}`
+    );
     return data;
   } catch (error) {
-    console.log(error);
+    message.error(error.message || "Something went wrong!");
   }
 };

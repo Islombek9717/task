@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { Container, Form, Label, Button, AntInput } from "./style";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Navigate, useNavigate } from "react-router-dom";
+import { message } from "antd";
 
 const Login = () => {
   const loginRef = useRef(null);
@@ -11,15 +12,12 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const onSave = () => {
-    console.log({
-      login: login,
-      password: password,
-    });
+  const onSubmit = () => {
     if (login === "admin" && password === "admin12345") {
+      localStorage.setItem("userToken", "token");
       navigate("/news");
     } else {
-      alert("Incorrect password or login");
+      message.error("Incorrect password or login");
     }
   };
 
@@ -44,7 +42,7 @@ const Login = () => {
           placeholder="Password"
           prefix={<LockOutlined />}
         />
-        <Button onClick={onSave} border color mt={20} width="100%">
+        <Button onClick={onSubmit} border color="true" mt={20} width="100%">
           Login
         </Button>
       </Form>

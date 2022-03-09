@@ -1,60 +1,79 @@
 import React, { useEffect, useState } from "react";
 import { Container, Wrapper, Title, Body, Heading } from "./style";
-import axios from "axios";
-import { message, Pagination } from "antd";
+import { message, Pagination, Space, Skeleton } from "antd";
 import { getPostsData } from "../../api";
+import { Navigate } from "react-router-dom";
 
 const News = () => {
+  const token = localStorage.getItem("userToken");
   const [posts, setPosts] = useState([]);
-  useEffect(() => {
-    getPostsData().then((data) => {
-      setPosts(data);
-    });
-  }, []);
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(20);
+  const [total, setTotal] = useState();
+  const [loading, setLoading] = useState(false);
 
-  const data = [
-    {
-      id: 1,
-      user_id: 3617,
-      title:
-        "Denego cariosus aedificium iste cultellus et clam assumenda beatus capillus quis vivo caput cibus conicio campana.",
-      body: "Uberrime terminatio adicio. Magnam conservo pecunia. Admitto ventus bellicus. Ultio vorago tametsi. Deleniti quo voco. Confugo viduo utrum. Accedo clementia callide. Abduco quaerat consequatur. Nam compello vilitas. Aegre vicinus comedo. Unus terebro ver. Quibusdam amoveo terminatio. Spes culpa sortitus. Sit arbitro atqui. Pectus alter caveo. Quod ventito sollers. Vito accedo qui.",
-    },
-    {
-      id: 2,
-      user_id: 3616,
-      title:
-        "Autem viduata tenuis aqua depereo astrum avaritia desidero ara abstergo abundans avarus debeo accommodo conscendo turbo.",
-      body: "Baiulus capio tracto. Arceo vesco aro. Modi via vulpes. Pauper auctus benigne. Illo caput calcar. Sumptus id stipes. Crux admoneo utpote. Soleo sub virtus. Antiquus deludo degenero. Conspergo absum aveho. Decor cuppedia dens. Ceno tabula maxime. Ratione aptus velum. Texo delibero balbus. Sequi verumtamen vinculum. Amicitia crur illo. Constans delinquo defaeco. Advenio amor celo.",
-    },
-    {
-      id: 3,
-      user_id: 3602,
-      title:
-        "Cribro damno atavus alienus deduco tempus color adsum tametsi ambitus vinco apto cultura.",
-      body: "Cogo explicabo adficio. At qui nostrum. Angelus delicate id. Civis commodo tertius. Soleo despirmatio tempus. Tondeo absens dedecor. Cohors vicinus utrimque. Tamdiu surculus conscendo. Attero utroque consequatur. Ascisco aliquid adflicto. Stipes quas argentum. Bardus crastinus admoveo. Universe cribro comburo. Totam non aut. Sustineo ultio voluptatibus. Culpa solus quia. Comparo animi supellex. Unde ea tabgo. Viduo aspicio quibusdam. Clibanus stella sit. Bardus ara angulus.",
-    },
-    {
-      id: 4,
-      user_id: 3501,
-      title:
-        "Casso delectatio quia conqueror avarus demo asporto thymum vicinus atrocitas admiratio pecco tabesco sodalitas pauci turpis.",
-      body: "Tibi temperantia ut. Tempore corpus decimus. Impedit velociter decor. Delicate in esse. Ut iusto sumptus. Viriliter decerno currus. Decretum virgo aeneus. Apto verbera id. Timor vel aptus. Credo carus demergo. Eaque facilis desparatus. Amissio peccatus voluptatem. Denuncio defigo cupressus. Pecus coaegresco sortitus. Studio aegrus attollo. Impedit vester subiungo. Subnecto timidus tempora. Molestiae adsidue amicitia. Acsi tergeo tero.",
-    },
-  ];
+  const onShowSizeChange = (current, size) => {
+    setSize(size);
+  };
+
+  const handlePaginationChange = (n) => {
+    setPage(n);
+  };
+
+  useEffect(() => {
+    const getData = () => {
+      setLoading(true);
+
+      getPostsData({ page, limit: size })
+        .then((data) => {
+          setPosts(data?.data);
+
+          setLoading(false);
+          setTotal(data?.meta?.pagination?.total);
+        })
+        .catch((err) => {
+          message.error(err?.message || "Something went wrong!");
+          setLoading(false);
+        });
+    };
+
+    getData();
+  }, [page, size]);
+
+  if (!token) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <Container>
-      {data.map(({ title, body, id }) => (
-        <Wrapper key={id}>
-          <Title>
-            <Heading>Title:</Heading> {title}
-          </Title>
-          <Body>
-            <Heading>Body:</Heading> {body}
-          </Body>
-        </Wrapper>
-      ))}
+      {loading ? (
+        <Skeleton active />
+      ) : (
+        posts?.map(({ title, body, id }) => (
+          <Wrapper key={id}>
+            <Title>
+              <Heading>Title:</Heading> {title}
+            </Title>
+            <Body>
+              <Heading>Body:</Heading> {body}
+            </Body>
+          </Wrapper>
+        ))
+      )}
+
+      <Space>
+        <Pagination
+          defaultCurrent={page === 0 ? 1 : page}
+          current={page === 0 ? 1 : page}
+          total={total}
+          onChange={handlePaginationChange}
+          defaultPageSize={size}
+          showSizeChanger
+          onShowSizeChange={onShowSizeChange}
+          pageSizeOptions={["5", "10", "20", "50", "100"]}
+          pageSize={size}
+        />
+      </Space>
     </Container>
   );
 };
