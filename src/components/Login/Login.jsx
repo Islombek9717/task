@@ -4,18 +4,19 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { Navigate, useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const loginRef = useRef(null);
+  const pwRef = useRef(null);
+
+  const [login, setLogin] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const loginRef = useRef("");
-  const pwRef = useRef("");
+
   const onSave = () => {
     console.log({
-      login: loginRef.current.value,
-      password: pwRef.current.value,
+      login: login,
+      password: password,
     });
-    if (
-      loginRef.current.value === "admin" &&
-      pwRef.current.value === "admin12345"
-    ) {
+    if (login === "admin" && password === "admin12345") {
       navigate("/news");
     } else {
       alert("Incorrect password or login");
@@ -28,15 +29,17 @@ const Login = () => {
         <Form.Title>Login</Form.Title>
         <Label>Login</Label>
         <AntInput
-          onChange={(e) => (loginRef.current.value = e.target.value)}
+          value={login}
+          onChange={(e) => setLogin(e.target.value)}
           ref={loginRef}
           placeholder="Login"
           prefix={<UserOutlined />}
         />
         <Label>Password</Label>
         <AntInput
+          value={password}
           type={"password"}
-          onChange={(e) => (pwRef.current.value = e.target.value)}
+          onChange={(e) => setPassword(e.target.value)}
           ref={pwRef}
           placeholder="Password"
           prefix={<LockOutlined />}
