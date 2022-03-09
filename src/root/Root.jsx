@@ -5,6 +5,8 @@ import Navbar from "../components/Navbar/Navbar";
 import { navbar } from "../utils/navbar";
 
 const Root = () => {
+  const token = localStorage.getItem("token");
+  console.log(token);
   return (
     <Container>
       <BrowserRouter>
