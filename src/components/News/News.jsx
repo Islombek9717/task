@@ -14,7 +14,7 @@ const News = () => {
       let res;
 
       try {
-        res = await axios.get(`${REACT_APP_BASE_URL}/page=${page}`);
+        res = await axios.get(`${REACT_APP_BASE_URL}page=${page}`);
         setPosts(res?.data?.items);
         setTotal(res?.data?.total_count);
       } catch (err) {
