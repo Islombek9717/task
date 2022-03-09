@@ -32,7 +32,7 @@ const Navbar = () => {
         <Button
           onClick={() => {
             localStorage.removeItem("userToken");
-            navigate("/main");
+            navigate("/login");
           }}
           border="true"
         >

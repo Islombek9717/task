@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Input } from "antd";
+import { Input, Form } from "antd";
 
 export const Container = styled.div`
   padding: 100px 0;
@@ -8,7 +8,7 @@ export const Container = styled.div`
   justify-content: center;
 `;
 
-export const Form = styled.div`
+export const AntForm = styled(Form)`
   padding: 30px 20px;
   width: 420px;
   height: 300px;
@@ -17,7 +17,7 @@ export const Form = styled.div`
   box-shadow: 0px 0px 30px -10px rgba(0, 0, 0, 0.15);
 `;
 
-Form.Title = styled.div`
+AntForm.Title = styled.div`
   font-weight: 500;
   font-size: 33px;
   line-height: 40px;
